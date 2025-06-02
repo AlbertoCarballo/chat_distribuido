@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
-const socket = io("http://192.168.1.156:3001"); // IP y puerto de tu backend
+const socket = io("http://localhost:3001"); // Cambia esta IP por la de tu backend
 
 function Login() {
     const [nombreUsuario, setNombreUsuario] = useState("");
@@ -10,19 +10,18 @@ function Login() {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
+    // Puedes definir la IP manualmente aquí, o luego obtenerla dinámicamente
+    const ipCliente = "172.17.38.25"; // Ejemplo de IP que envías manualmente
+
     const handleLogin = (e) => {
         e.preventDefault();
         setError(null);
-    
-        socket.emit("login", { nombreUsuario, contraseña }, (response) => {
+
+        socket.emit("login", { nombreUsuario, contraseña, ip: ipCliente }, (response) => {
             if (response.success) {
-                // ✅ Guardar solo el nombre del usuario (más simple)
                 localStorage.setItem("usuario", nombreUsuario);
-    
-                // ⛳ Redireccionar
                 navigate("/chat");
             } else {
-                // ❌ Error de login
                 setError(response.mensaje);
             }
         });
