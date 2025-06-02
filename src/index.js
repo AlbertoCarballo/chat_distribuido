@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';  // <-- Importa BrowserRouter
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import "@fontsource/poppins"; // Fuente local desde npm
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

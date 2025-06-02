@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
-import { LiMensaje, UIMensajes } from "../ui-components";
+import {
+    ChatContainer,
+    UIMensajes,
+    LiMensaje,
+    InputBox,
+    InputMensaje,
+    BotonEnviar
+} from "../ui-components";
+
 
 function Chat() {
     const [socket, setSocket] = useState(null);
@@ -87,25 +95,32 @@ function Chat() {
     };
 
     return (
-        <div className="chat-container">
+        <ChatContainer>
             <h2>{isConnected ? "🟢 Conectado" : "🔴 No conectado"}</h2>
+
             <UIMensajes>
                 {mensajes.map((mensaje, index) => (
-                    <LiMensaje key={index}>
-                        {mensaje.usuario}: {mensaje.mensaje}
+                    <LiMensaje key={index} isOwn={mensaje.usuario === socket?.id}>
+                        <strong>{mensaje.usuario === socket?.id ? "Tú" : mensaje.usuario}</strong>
+                        {mensaje.mensaje}
                     </LiMensaje>
                 ))}
             </UIMensajes>
-            <input
-                type="text"
-                value={nuevoMensaje}
-                onChange={(e) => setNuevoMensaje(e.target.value)}
-                placeholder="Escribe tu mensaje"
-            />
-            <button onClick={enviarMensaje} disabled={!isConnected || nuevoMensaje.trim() === ""}>
-                Enviar
-            </button>
-        </div>
+
+            <InputBox>
+                <InputMensaje
+                    type="text"
+                    value={nuevoMensaje}
+                    onChange={(e) => setNuevoMensaje(e.target.value)}
+                    placeholder="Escribe tu mensaje"
+                />
+                <BotonEnviar onClick={enviarMensaje} disabled={!isConnected || nuevoMensaje.trim() === ""}>
+                    Enviar
+                </BotonEnviar>
+            </InputBox>
+        </ChatContainer>
+
+
     );
 }
 
