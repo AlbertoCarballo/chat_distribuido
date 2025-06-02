@@ -9,13 +9,13 @@ import {
     BotonEnviar
 } from "../ui-components";
 
-
 function Chat() {
     const [socket, setSocket] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
     const [nuevoMensaje, setNuevoMensaje] = useState("");
     const [mensajes, setMensajes] = useState([]);
     const [servidores, setServidores] = useState([]);
+    const [usuarioNombre] = useState(localStorage.getItem("usuario")); // ✅ nombre del usuario
 
     // 🔄 Cargar IPs dinámicamente desde el backend
     useEffect(() => {
@@ -50,7 +50,7 @@ function Chat() {
                 timeout: 3000
             });
 
-            nuevoSocket.on("connect", () => {
+            nuevoSocket.on("connect", async () => {
                 console.log(`✅ Conectado a ${servidores[index]}`);
                 setIsConnected(true);
                 setSocket(nuevoSocket);
@@ -59,6 +59,16 @@ function Chat() {
                 nuevoSocket.on("chat_message", (data) => {
                     setMensajes((mensajes) => [...mensajes, data]);
                 });
+
+                try {
+                    const res = await fetch("http://localhost:3001/mensajes");
+                    const data = await res.json();
+                    if (data.success) {
+                        setMensajes(data.mensajes);
+                    }
+                } catch (err) {
+                    console.error("Error cargando mensajes del historial:", err);
+                }
             });
 
             nuevoSocket.on("connect_error", () => {
@@ -86,9 +96,10 @@ function Chat() {
     // ✉️ Enviar mensaje
     const enviarMensaje = () => {
         if (socket && isConnected && nuevoMensaje.trim() !== "") {
-            socket.emit("chat_message", {
-                usuario: socket.id,
-                mensaje: nuevoMensaje
+            socket.emit("enviar_mensaje", {
+                usuario: usuarioNombre, // ✅ usar el nombre
+                mensaje: nuevoMensaje,
+                chatId: 1
             });
             setNuevoMensaje("");
         }
@@ -100,8 +111,8 @@ function Chat() {
 
             <UIMensajes>
                 {mensajes.map((mensaje, index) => (
-                    <LiMensaje key={index} isOwn={mensaje.usuario === socket?.id}>
-                        <strong>{mensaje.usuario === socket?.id ? "Tú" : mensaje.usuario}</strong>
+                    <LiMensaje key={index} isOwn={mensaje.usuario === usuarioNombre}>
+                        <strong>{mensaje.usuario === usuarioNombre ? "Tú" : mensaje.usuario}</strong>
                         {mensaje.mensaje}
                     </LiMensaje>
                 ))}
@@ -119,8 +130,6 @@ function Chat() {
                 </BotonEnviar>
             </InputBox>
         </ChatContainer>
-
-
     );
 }
 

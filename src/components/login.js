@@ -13,14 +13,16 @@ function Login() {
     const handleLogin = (e) => {
         e.preventDefault();
         setError(null);
-
+    
         socket.emit("login", { nombreUsuario, contraseña }, (response) => {
             if (response.success) {
-                // Login correcto
-                localStorage.setItem("usuario", JSON.stringify(response.usuario));
+                // ✅ Guardar solo el nombre del usuario (más simple)
+                localStorage.setItem("usuario", nombreUsuario);
+    
+                // ⛳ Redireccionar
                 navigate("/chat");
             } else {
-                // Error de login
+                // ❌ Error de login
                 setError(response.mensaje);
             }
         });
