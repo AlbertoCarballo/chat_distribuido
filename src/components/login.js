@@ -1,6 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
+import {
+    LoginContainer,
+    LoginBox,
+    LoginTitle,
+    LoginInput,
+    LoginButton,
+    RegisterButton,
+    ErrorText
+} from '../login-ui-components'
 
 function Login() {
     const [nombreUsuario, setNombreUsuario] = useState("");
@@ -53,36 +62,32 @@ function Login() {
     };
 
     return (
-        <form onSubmit={handleLogin} style={{ maxWidth: 300, margin: "auto", marginTop: 50 }}>
-            <h2>Login</h2>
-            <input
-                type="text"
-                placeholder="Nombre de usuario"
-                value={nombreUsuario}
-                onChange={(e) => setNombreUsuario(e.target.value)}
-                required
-                style={{ width: "100%", marginBottom: 10, padding: 8 }}
-            />
-            <input
-                type="password"
-                placeholder="Contraseña"
-                value={contraseña}
-                onChange={(e) => setContraseña(e.target.value)}
-                required
-                style={{ width: "100%", marginBottom: 10, padding: 8 }}
-            />
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <button type="submit" style={{ width: "100%", padding: 10, marginBottom: 10 }}>
-                Entrar
-            </button>
-            <button
-                type="button"
-                onClick={irARegistro}
-                style={{ width: "100%", padding: 10, backgroundColor: "#ccc" }}
-            >
-                Registrar
-            </button>
-        </form>
+        <LoginContainer>
+            <LoginBox>
+                <LoginTitle>Iniciar Sesión</LoginTitle>
+                <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+                    <LoginInput
+                        type="text"
+                        placeholder="Nombre de usuario"
+                        value={nombreUsuario}
+                        onChange={(e) => setNombreUsuario(e.target.value)}
+                        required
+                    />
+                    <LoginInput
+                        type="password"
+                        placeholder="Contraseña"
+                        value={contraseña}
+                        onChange={(e) => setContraseña(e.target.value)}
+                        required
+                    />
+                    {error && <ErrorText>{error}</ErrorText>}
+                    <LoginButton type="submit">Entrar</LoginButton>
+                </form>
+                <RegisterButton type="button" onClick={irARegistro}>
+                    Registrarse
+                </RegisterButton>
+            </LoginBox>
+        </LoginContainer>
     );
 }
 
