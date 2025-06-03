@@ -29,7 +29,7 @@ function Chat() {
     useEffect(() => {
         const cargarServidores = async () => {
             try {
-                const res = await fetch("http://192.168.1.176:3001/usuarios/ips");
+                const res = await fetch("http://192.168.1.66:3001/usuarios/ips");
                 const data = await res.json();
                 listaIPs.current = data;
 

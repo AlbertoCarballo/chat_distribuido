@@ -1,6 +1,15 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
+import {
+    SignUpContainer,
+    SignUpBox,
+    SignUpTitle,
+    SignUpInput,
+    SignUpButton,
+    RegisterButton,
+    ErrorText
+} from '../signup-ui-components';
 
 function Registro() {
     const [nombreUsuario, setNombreUsuario] = useState("");
@@ -10,11 +19,11 @@ function Registro() {
     const [socket, setSocket] = useState(null);
     const navigate = useNavigate();
 
-    const ipCliente = "192.168.1.176";
+    const ipCliente = "192.168.1.66";
 
     useEffect(() => {
         // Crear conexión socket al montar el componente
-        const newSocket = io("http://192.168.1.176:3001");
+        const newSocket = io("http://192.168.1.66:3001");
         setSocket(newSocket);
 
         // Al desmontar el componente, desconectamos el socket para limpiar recursos
@@ -48,44 +57,47 @@ function Registro() {
     };
 
     return (
-        <form onSubmit={handleRegistro} style={{ maxWidth: 300, margin: "auto", marginTop: 50 }}>
-            <h2>Registro</h2>
-            <input
-                type="text"
-                placeholder="Nombre de usuario"
-                value={nombreUsuario}
-                onChange={(e) => setNombreUsuario(e.target.value)}
-                required
-                style={{ width: "100%", marginBottom: 10, padding: 8 }}
-            />
-            <input
-                type="email"
-                placeholder="Correo"
-                value={correo}
-                onChange={(e) => setCorreo(e.target.value)}
-                required
-                style={{ width: "100%", marginBottom: 10, padding: 8 }}
-            />
-            <input
-                type="password"
-                placeholder="Contraseña"
-                value={contraseña}
-                onChange={(e) => setContraseña(e.target.value)}
-                required
-                style={{ width: "100%", marginBottom: 10, padding: 8 }}
-            />
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <button type="submit" style={{ width: "100%", padding: 10, marginBottom: 10 }}>
-                Registrarse
-            </button>
-            <button
-                type="button"
-                onClick={() => navigate("/")}
-                style={{ width: "100%", padding: 10, backgroundColor: "#ccc" }}
-            >
-                Volver al login
-            </button>
-        </form>
+        <SignUpContainer>
+            <SignUpBox>
+                <SignUpTitle>Registro</SignUpTitle>
+
+                <form onSubmit={handleRegistro} style={{ display: "flex", flexDirection: "column", gap: "15px"  }}>
+                    <SignUpInput
+                        type="text"
+                        placeholder="Nombre de usuario"
+                        value={nombreUsuario}
+                        onChange={(e) => setNombreUsuario(e.target.value)}
+                        required
+                        
+                    />
+                    <SignUpInput
+                        type="email"
+                        placeholder="Correo"
+                        value={correo}
+                        onChange={(e) => setCorreo(e.target.value)}
+                        required
+                    />
+                    <SignUpInput
+                        type="password"
+                        placeholder="Contraseña"
+                        value={contraseña}
+                        onChange={(e) => setContraseña(e.target.value)}
+                        required
+                    />
+                    {error && <p style={{ color: "red" }}>{error}</p>}
+                    <SignUpButton type="submit">
+                        Registrarse
+                    </SignUpButton>
+                    <RegisterButton
+                        type="button"
+                        onClick={() => navigate("/")}
+                    >
+                        Volver al login
+                    </RegisterButton>
+                </form>
+            </SignUpBox>
+
+        </SignUpContainer>
     );
 }
 

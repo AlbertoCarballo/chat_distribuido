@@ -18,11 +18,11 @@ function Login() {
     const navigate = useNavigate();
     const socketRef = useRef(null);
 
-    const ipCliente = "192.168.1.176";
+    const ipCliente = "192.168.1.66";
 
     useEffect(() => {
         // Crear la conexión socket al montar el componente
-        socketRef.current = io("http://192.168.1.176:3001");
+        socketRef.current = io("http://192.168.1.66:3001");
 
         // Limpiar el socket al desmontar
         return () => {
