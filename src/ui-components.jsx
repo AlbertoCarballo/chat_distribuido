@@ -37,6 +37,7 @@ const LiMensaje = styled.li`
   background-color: ${({ isOwn }) => (isOwn ? "#d1e7dd" : "#e7f1ff")};
   border: 1px solid ${({ isOwn }) => (isOwn ? "#a3cfbb" : "#b6d4fe")};
   align-self: ${({ isOwn }) => (isOwn ? "flex-end" : "flex-start")};
+  min-width: 30%;
   max-width: 70%;
   padding: 12px 18px;
   border-radius: 16px;
@@ -99,11 +100,50 @@ const BotonEnviar = styled.button`
   }
 `;
 
+const LogoutButton = styled.button`
+  background-color: #339af0;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color:rgb(241, 219, 12);
+    color: black;
+  }
+`;
+
+const ShutdownButton = styled.button`
+  background-color: #339af0;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  margin-left: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color:rgb(214, 28, 28);
+    color: black;
+  }
+`;
+
 export {
   ChatContainer,
   UIMensajes,
   LiMensaje,
   InputBox,
   InputMensaje,
-  BotonEnviar
+  BotonEnviar,
+  LogoutButton,
+  ShutdownButton
 };

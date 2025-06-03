@@ -7,7 +7,9 @@ import {
     LiMensaje,
     InputBox,
     InputMensaje,
-    BotonEnviar
+    BotonEnviar,
+    LogoutButton,
+    ShutdownButton
 } from "../ui-components";
 
 function Chat() {
@@ -170,8 +172,8 @@ function Chat() {
         <ChatContainer>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
                 <div>
-                    <button onClick={handleLogout} style={{ marginRight: 10 }}>Logout</button>
-                    <button onClick={handleShutdown} disabled={!isConnected}>Shutdown</button>
+                    <LogoutButton onClick={handleLogout} >Logout</LogoutButton>
+                    <ShutdownButton onClick={handleShutdown} disabled={!isConnected}>Shutdown</ShutdownButton>
                 </div>
                 <h2>{isConnected ? "🟢 Conectado" : isTryingToConnect ? "🟡 Conectando..." : "🔴 No conectado"}</h2>
             </div>
@@ -183,7 +185,7 @@ function Chat() {
             <UIMensajes>
                 {mensajes.map((mensaje) => (
                     <LiMensaje key={mensaje._id} isOwn={mensaje.usuario === usuarioNombre}>
-                        <strong>{mensaje.usuario === usuarioNombre ? "Tú" : mensaje.usuario}</strong>: {mensaje.mensaje}
+                        <strong>{mensaje.usuario === usuarioNombre ? "Tú" : mensaje.usuario}</strong> {mensaje.mensaje}
                     </LiMensaje>
                 ))}
             </UIMensajes>
