@@ -1,65 +1,68 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
-function Login() {
+function Registro() {
     const [nombreUsuario, setNombreUsuario] = useState("");
+    const [correo, setCorreo] = useState("");
     const [contraseña, setContraseña] = useState("");
     const [error, setError] = useState(null);
+    const [socket, setSocket] = useState(null);
     const navigate = useNavigate();
-    const socketRef = useRef(null);
 
     const ipCliente = "192.168.1.176";
 
     useEffect(() => {
-        // Crear la conexión socket al montar el componente
-        socketRef.current = io("http://192.168.1.176:3001");
+        // Crear conexión socket al montar el componente
+        const newSocket = io("http://192.168.1.176:3001");
+        setSocket(newSocket);
 
-        // Limpiar el socket al desmontar
+        // Al desmontar el componente, desconectamos el socket para limpiar recursos
         return () => {
-            if (socketRef.current) {
-                socketRef.current.disconnect();
-            }
+            newSocket.disconnect();
         };
     }, []);
 
-    const handleLogin = (e) => {
+    const handleRegistro = (e) => {
         e.preventDefault();
         setError(null);
 
-        if (!socketRef.current) {
+        if (!socket) {
             setError("No hay conexión con el servidor.");
             return;
         }
 
-        socketRef.current.emit(
-            "login",
-            { nombreUsuario, contraseña, ip: ipCliente },
+        socket.emit(
+            "registrar",
+            { nombreUsuario, correo, contraseña, ip: ipCliente },
             (response) => {
                 if (response.success) {
-                    localStorage.setItem("usuario", nombreUsuario);
-                    // Desconectamos el socket porque ya no lo necesitamos aquí
-                    socketRef.current.disconnect();
-                    navigate("/chat");
+                    alert("✅ Registro exitoso. Ahora puedes iniciar sesión.");
+                    socket.disconnect(); // Desconectar tras éxito
+                    navigate("/");
                 } else {
-                    setError(response.mensaje);
+                    setError(response.mensaje || "Error al registrar");
                 }
             }
         );
     };
 
-    const irARegistro = () => {
-        navigate("/registro");
-    };
-
     return (
-        <form onSubmit={handleLogin} style={{ maxWidth: 300, margin: "auto", marginTop: 50 }}>
-            <h2>Login</h2>
+        <form onSubmit={handleRegistro} style={{ maxWidth: 300, margin: "auto", marginTop: 50 }}>
+            <h2>Registro</h2>
             <input
                 type="text"
                 placeholder="Nombre de usuario"
                 value={nombreUsuario}
                 onChange={(e) => setNombreUsuario(e.target.value)}
+                required
+                style={{ width: "100%", marginBottom: 10, padding: 8 }}
+            />
+            <input
+                type="email"
+                placeholder="Correo"
+                value={correo}
+                onChange={(e) => setCorreo(e.target.value)}
                 required
                 style={{ width: "100%", marginBottom: 10, padding: 8 }}
             />
@@ -73,17 +76,17 @@ function Login() {
             />
             {error && <p style={{ color: "red" }}>{error}</p>}
             <button type="submit" style={{ width: "100%", padding: 10, marginBottom: 10 }}>
-                Entrar
+                Registrarse
             </button>
             <button
                 type="button"
-                onClick={irARegistro}
+                onClick={() => navigate("/")}
                 style={{ width: "100%", padding: 10, backgroundColor: "#ccc" }}
             >
-                Registrar
+                Volver al login
             </button>
         </form>
     );
 }
 
-export default Login;
+export default Registro;
